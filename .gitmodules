@@ -7,3 +7,8 @@
 	path = prisehub/pmis
 	url = git@github.com:prisehub/pmis2.git
 	branch = 13.0
+
+[submodule "prisehub/odoogob"]
+	path = prisehub/odoogob
+	url = git@github.com:prisehub/odoogob.git
+	branch = 13.0

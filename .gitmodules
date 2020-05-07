@@ -2,3 +2,8 @@
 	path = OCA/purchase-workflow
 	url = git@github.com:OCA/purchase-workflow.git
 	branch = 13.0
+
+[submodule "prisehub/pmis"]
+	path = prisehub/pmis
+	url = git@github.com:prisehub/pmis2.git
+	branch = 13.0

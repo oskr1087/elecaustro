@@ -22,3 +22,8 @@
 	path = OCA/server-ux
 	url = git@github.com:OCA/server-ux.git
 	branch = 13.0
+
+[submodule "ovnicraft/server-ux"]
+	path = ovnicraft/server-ux
+	url = git@github.com:ovnicraft/server-ux.git
+	branch = 13.0

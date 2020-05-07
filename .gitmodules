@@ -12,3 +12,8 @@
 	path = prisehub/odoogob
 	url = git@github.com:prisehub/odoogob.git
 	branch = 13.0
+
+[submodule "OCA/project"]
+	path = OCA/project
+	url = git@github.com:OCA/project.git
+	branch = 13.0

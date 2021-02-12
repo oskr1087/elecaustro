@@ -1,0 +1,148 @@
+<odoo>
+    <record id="view_workorder_form" model="ir.ui.view">
+        <field name="name">view.workorder.form</field>
+        <field name="model">workorder.workorder</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button class="oe_highlight" name="action_request" string="Request Authorization"
+                            groups="workorders.group_workorder_users"
+                            attrs="{'invisible': [('state','!=','draft')]}" type="object"/>
+
+                    <button class="oe_highlight" name="action_authorize" string="Authorize"
+                            confirm="Are you sure to authorize this document ?"
+                            groups="workorders.group_workorder_authorize"
+                            attrs="{'invisible': [('state','not in',['requested'])]}" type="object"/>
+
+                    <button class="oe_highlight" name="action_approve" string="Approve"
+                            confirm="Are you sure to approve this document ?"
+                            groups="workorders.group_workorder_approve"
+                            attrs="{'invisible': [('state','!=','authorized')]}" type="object"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="code" class="oe_read_only"/> <br></br>
+                            <field name="name" placeholder="Work Order Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="request_user_id"/>
+                        </group>
+                        <group>
+                            <field name="authorize_user_id"/>
+                        </group>
+                    </group>
+                    <group string="Justification" colspan="4">
+                        <field name="justification" nolabel="1"/>
+                    </group>
+                    <group string="Budget Info">
+                        <group>
+                            <field name="budget_item" required="1"/>
+                        </group>
+                        <group>
+                            <field name="budget" required="1"/>
+                        </group>
+
+                    </group>
+                    <group string="General Conditions">
+                        <group>
+                            <field name="days" required="1"/>
+                        </group>
+                        <group>
+                            <field name="penalty_fee"/>
+                        </group>
+                    </group>
+                    <group string="Technical Specifications">
+                        <field name="technical_detail" nolabel="1"/>
+                    </group>
+                    <group string="Payment Terms">
+                        <field name="payment_terms" nolabel="1"/>
+                    </group>
+                    <group string="Penalty Terms">
+                        <field name="penalty_terms" nolabel="1"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_workorder_tree" model="ir.ui.view">
+        <field name="name">view.workorder.tree</field>
+        <field name="model">workorder.workorder</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="budget_item"/>
+                <field name="days"/>
+                <field name="budget"/>
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_workorder_search" model="ir.ui.view">
+        <field name="name">view.workorder.search</field>
+        <field name="model">workorder.workorder</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="days"/>
+                <field name="state"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_workorder_draft" model="ir.actions.act_window">
+        <field name="name">Request Work Orders</field>
+        <field name="res_model">workorder.workorder</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state','=','draft')]</field>
+    </record>
+
+    <record id="action_workorder_request" model="ir.actions.act_window">
+        <field name="name">To Authorize Work Orders</field>
+        <field name="res_model">workorder.workorder</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state','=','requested')]</field>
+    </record>
+
+    <record id="action_workorder_authorize" model="ir.actions.act_window">
+        <field name="name">To Approve Work Orders</field>
+        <field name="res_model">workorder.workorder</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state','=','authorized')]</field>
+    </record>
+
+    <record id="action_workorder_approved" model="ir.actions.act_window">
+        <field name="name">Approved Work Orders</field>
+        <field name="res_model">workorder.workorder</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state','=','approved')]</field>
+    </record>
+
+    <menuitem name="Workorder Management" id="main_menu_workorders" web_icon="workorders,static/description/icon.png"/>
+
+    <menuitem action="action_workorder_draft"
+              groups="workorders.group_workorder_users"
+              id="menu_workorder_draft" parent="main_menu_workorders"/>
+    <menuitem action="action_workorder_request"
+              groups="workorders.group_workorder_authorize"
+              id="menu_workorder_request" parent="main_menu_workorders"/>
+    <menuitem action="action_workorder_authorize"
+              groups="workorders.group_workorder_approve"
+              id="menu_workorder_authorize" parent="main_menu_workorders"/>
+    <menuitem action="action_workorder_approved"
+              groups="workorders.group_workorder_approve"
+              id="menu_workorder_approved" parent="main_menu_workorders"/>
+
+</odoo>

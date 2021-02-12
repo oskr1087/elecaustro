@@ -1,0 +1,17 @@
+<odoo noupdate="1">
+
+    <record id="data_res_partner_invoice_address_elecaustro" model="res.partner">
+        <field name="type">invoice</field>
+        <field name="parent_id" ref="base.main_partner"/>
+        <field name="city">Cuenca</field>
+        <field name="country_id" ref="base.ec"/>
+    </record>
+
+    <record id="base.main_company" model="res.company">
+        <field name="city">Cuenca</field>
+        <field name="currency_id" ref="base.USD"/>
+        <field name="country_id" ref="base.ec"/>
+        <field name="logo" type="base64" file="elecaustro/static/img/logo.png"/>
+    </record>
+
+</odoo>

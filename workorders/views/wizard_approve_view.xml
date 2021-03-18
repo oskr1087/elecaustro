@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_wizard_approve_workorder_form" model="ir.ui.view">
+        <field name="name">view.wizard.approve.workorder.form</field>
+        <field name="model">wizard.approve.workorder</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="comment" nolabel="1"/>
+                </group>
+            </form>
+            <footer>
+                <button string="Close" special="cancel" class="btn-secondary"/>
+                <button class="oe_higlight btn-primary" string="Approve WorkOrder" name="action_register_approve" confirm="Are you sure to approve this document ?" type="object"/>
+            </footer>
+        </field>
+    </record>
+
+    <record id="action_wizard_approve_workorder" model="ir.actions.act_window">
+        <field name="name">Approve WorkOrder</field>
+        <field name="res_model">wizard.approve.workorder</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

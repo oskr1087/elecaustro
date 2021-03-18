@@ -1,7 +1,7 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_workorder_workorder,access_workorder_workorder,model_workorder_workorder,base.group_user,1,1,1,1
 access_workorder_penalty,access_workorder_penalty,model_workorder_penalty,base.group_user,1,0,0,0
-access_workorder_penalty,access_workorder_penalty,model_workorder_penalty,base.group_system,1,1,1,1
+access_workorder_penalty_system,access_workorder_penalty_system,model_workorder_penalty,base.group_system,1,1,1,1
 access_workorder_payment_term,access_workorder_payment_term,model_workorder_payment_term,base.group_user,1,0,0,0
-access_workorder_payment_term,access_workorder_payment_term,model_workorder_payment_term,base.group_system,1,1,1,1
+access_workorder_payment_term_system,access_workorder_payment_term_system,model_workorder_payment_term,base.group_system,1,1,1,1
 access_wizard_approve_workorder,access_wizard_approve_workorder,model_wizard_approve_workorder,base.group_user,1,1,1,1

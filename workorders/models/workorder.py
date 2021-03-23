@@ -7,13 +7,40 @@ class WorkOrder(models.Model):
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _description = "Work Orders"
 
-    code = fields.Char(required=True, default="/", readonly=True)
+    def _get_sequence(self, user_id):
+        department = self.env["hr.employee"].department_by_user(user_id)
+        return (
+            department.sequence_id
+            if department.sequence_id
+            else department.parent_id.sequence_id
+        )
+
+    @api.depends("request_user_id")
+    def _compute_department(self):
+        self.department_id = (
+            self.env["hr.employee"].department_by_user(self.request_user_id.id).id
+        )
+
+    @api.model
+    def create(self, values):
+        seq_date = None
+        if "date" in values:
+            seq_date = fields.Datetime.context_timestamp(
+                self, fields.Datetime.to_datetime(values["date"])
+            )
+        values["code"] = self._get_sequence(values["request_user_id"]).next_by_id(
+            seq_date
+        ) or _("New")
+        return super().create(values)
+
+    code = fields.Char(required=True, readonly=True, default=lambda self: _("New"))
     date = fields.Date(
         "Date",
         required=True,
         tracking=True,
         states={"draft": [("readonly", False)]},
         readonly=True,
+        default=fields.Date.today(),
     )
     name = fields.Char(
         "Work Order",
@@ -41,6 +68,9 @@ class WorkOrder(models.Model):
         readonly=True,
     )
 
+    department_id = fields.Many2one(
+        "hr.department", compute="_compute_department", store=True
+    )
     request_user_id = fields.Many2one(
         "res.users",
         string="Requested by",
@@ -94,6 +124,14 @@ class WorkOrder(models.Model):
     acceptance_date = fields.Date("Acceptance Date", tracking=True)
     acceptance_done = fields.Boolean("Supplier Done Acceptance?", readonly=True)
 
+    approve_level = fields.Selection(
+        [("director", "Director"), ("manager", "Manager")],
+        string="Type Approve",
+        required=True,
+        default="director",
+        states={"draft": [("readonly", False)]},
+        readonly=True,
+    )
     state = fields.Selection(
         [
             ("draft", "Draft"),
@@ -106,6 +144,11 @@ class WorkOrder(models.Model):
         default="draft",
         tracking=True,
     )
+
+    @api.constrains("date")
+    def _check_date_allowed(self):
+        if self.date < fields.Date.today():
+            raise UserError(_("Workorder can't have date less than today."))
 
     @api.onchange("payment_term_id")
     def _onchange_payment_term(self):
@@ -121,6 +164,17 @@ class WorkOrder(models.Model):
     def action_authorize(self):
         self.state = "authorized"
         self.authorize_user_id = self.env.user
+        if self.approve_level == "director":
+            view = self.env.ref("workorders.view_wizard_approve_workorder_form")
+            return {
+                "type": "ir.actions.act_window",
+                "name": _("Approve Details"),
+                "view_mode": "form",
+                "res_model": "wizard.approve.workorder",
+                "views": [(view.id, "form")],
+                "view_id": view.id,
+                "target": "new",
+            }
 
     def action_approve(self):
         self.state = "approved"

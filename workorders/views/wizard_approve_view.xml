@@ -14,7 +14,6 @@
                     <button class="oe_higlight btn-primary"
                             string="Approve WorkOrder"
                             name="action_register_approve"
-                            confirm="Are you sure to approve this document ?"
                             type="object"/>
                 </footer>
             </form>

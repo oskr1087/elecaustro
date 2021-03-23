@@ -14,8 +14,10 @@
     "data": [
         "security/groups.xml",
         "security/ir.model.access.csv",
+        "data/server_actions.xml",
         "views/wizard_approve_view.xml",
         "views/workorder_views.xml",
+        "views/hr_views.xml",
         "views/settings_views.xml",
     ],
     "installable": True,

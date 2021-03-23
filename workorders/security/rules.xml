@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="workorder_department_rule" model="ir.rule">
+        <field name="name">Ordenes de Trabajo por Departamento</field>
+        <field name="model_id" ref="model_workorder_workorder"/>
+        <field name="domain_force">['|',('department_id','=',False),('department_id', 'in', company_ids)]</field>
+    </record>
+</odoo>

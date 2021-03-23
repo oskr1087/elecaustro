@@ -1,0 +1,12 @@
+<odoo>
+
+    <record id="action_create_sequence" model="ir.actions.server">
+        <field name="name">Ordenes de Trabajo: Crear Secuencia</field>
+        <field name="state">code</field>
+        <field name="model_id" ref="hr.model_hr_department"/>
+        <field name="code">
+record.generate_sequence()
+        </field>
+    </record>
+
+</odoo>

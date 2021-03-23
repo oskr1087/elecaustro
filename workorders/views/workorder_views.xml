@@ -39,12 +39,16 @@
                             <field name="acceptance_date" attrs="{'invisible': [('state','!=','approved')], 'required': [('state','=','approved')], 'readonly': [('acceptance_done','=',True)]}"/>
                         </group>
                         <group>
+                            <label string="Requested By:" for="request_user_id"/>
                             <div class="o_row">
-                                <label string="Requested By:" for="request_user_id"/>
-                                <field name="request_user_id" class="oe_inline"/> from <field name="department_id"/>
+                                <field name="request_user_id" class="mr-2"/> from <field name="department_id" class="ml-2"/>
                             </div>
                             <field name="authorize_user_id" attrs="{'invisible': [('state','!=','authorized')]}"/>
-                            <field name="approve_user_id" attrs="{'invisible': [('state','!=','approved')]}"/>
+                            <label string="Approved by:" for="approve_user_id"/>
+                            <div class="o_row">
+                                <field name="approve_user_id" attrs="{'invisible': [('state','!=','approved')]}" class="ml-2"/>
+                                <field name="approved_date" attrs="{'invisible': [('state','!=','approved')]}" class="mr-2"/>
+                            </div>
                         </group>
                     </group>
                     <group string="Justification" colspan="4">
@@ -61,7 +65,10 @@
                     </group>
                     <group string="General Conditions">
                         <group>
-                            <field name="days" required="1"/>
+                            <label string="Execution Terms" for="days"/>
+                            <div class="o_row">
+                                <field name="days" required="1" class="mr-2"/> <field name="type_days" class="ml-2"/>
+                            </div>
                         </group>
                         <group>
                             <field name="penalty_fee"/>
@@ -85,11 +92,15 @@
                     <group string="Approve" attrs="{'invisible': [('state','!=','approved')]}">
                         <field name="approved_details" nolabel="1" readonly="1"/>
                     </group>
+                    <field name="acceptance_done" invisible="1"/>
                     <group string="Supplier Acceptance" attrs="{'invisible': [('state','!=','approved')]}">
-                        <field name="acceptance_done" invisible="1"/>
                         <field name="supplier_acceptance_terms" nolabel="1" attrs="{'readonly': [('acceptance_done','=',True)]}"/>
                     </group>
                 </sheet>
+
+                <div class="o_attachment_preview"
+                     attrs="{'invisible': [('state', '!=', 'approved')]}" />
+
                 <div class="oe_chatter">
                     <field name="message_follower_ids" groups="base.group_user"/>
                     <field name="activity_ids"/>
@@ -106,10 +117,12 @@
             <tree>
                 <field name="code"/>
                 <field name="name"/>
+                <field name="department_id"/>
                 <field name="budget_item"/>
                 <field name="days"/>
-                <field name="budget"/>
-                <field name="state" widget="badge"/>
+                <field name="budget" sum="TOTAL"/>
+                <field name="state" widget="badge" decoration-warning="state in ('requested', 'authorized')"
+                       decoration-success="state == 'approved'"/>
             </tree>
         </field>
     </record>

@@ -7,6 +7,9 @@ class WorkOrder(models.Model):
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _description = "Work Orders"
 
+    def user_job_title(self, user):
+        return user.employee_id.job_id.name
+
     def _get_sequence(self, user_id):
         department = self.env["hr.employee"].department_by_user(user_id)
         return (
@@ -69,7 +72,7 @@ class WorkOrder(models.Model):
     )
 
     department_id = fields.Many2one(
-        "hr.department", compute="_compute_department", store=True
+        "hr.department", compute="_compute_department", store=True, string="Department"
     )
     request_user_id = fields.Many2one(
         "res.users",
@@ -88,6 +91,12 @@ class WorkOrder(models.Model):
     item_budget_available = fields.Monetary("Budget available on Item")
     days = fields.Integer(
         "Execution Time", states={"draft": [("readonly", False)]}, readonly=True,
+    )
+    type_days = fields.Selection(
+        [("working", "Working Days"), ("calendar", "Calendar Days")],
+        string="Calendar Type",
+        required=True,
+        default="working",
     )
     technical_detail = fields.Html(
         states={"draft": [("readonly", False)]}, readonly=True,
@@ -178,15 +187,21 @@ class WorkOrder(models.Model):
 
     def action_approve(self):
         self.state = "approved"
+        self.approved_date = fields.Date.today()
         self.approve_user_id = self.env.user
 
     def print_report(self):
-        pass
+        return self.env.ref("workorders.workorder_report").report_action(
+            self.filtered(lambda r: r.state == "approved")
+        )
 
     def register_acceptance(self):
         if not self.acceptance_date:
             raise UserError(_("Must define acceptance date."))
         self.acceptance_done = True
+
+    def _get_report_base_filename(self):
+        return self.code
 
 
 class WorkOrderPenalty(models.Model):

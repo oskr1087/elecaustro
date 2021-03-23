@@ -30,3 +30,6 @@ class HrEmployee(models.Model):
     def department_by_user(self, user_id):
         empl = self.search([("user_id", "=", user_id)], limit=1)
         return empl.department_id
+
+    def fullname_report(self):
+        return f"{self.job_title} {self.name}"

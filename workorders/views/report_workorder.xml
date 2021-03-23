@@ -1,0 +1,131 @@
+<odoo>
+
+    <template id="report_workorder">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h4 class="text-center">INFIMA CUANTIA</h4>
+                        <h4 class="text-center">ORDEN DE TRABAJO <t t-esc="o.code"/></h4>
+                        <h4 class="text-center"><t t-esc="o.name"/></h4>
+
+                        <br/>
+                        <h5>INFORMACION DE LOS TRABAJOS A EJECUTAR</h5>
+                        <table class="table table-sm">
+                            <thead>
+                                <th>JUSTIFICACION</th>
+                            </thead>
+                            <tbody>
+                                <td class="text-justify">
+                                    <t t-raw="o.justification"/>
+                                </td>
+                            </tbody>
+                        </table>
+                        <table class="table table-sm">
+                            <thead>
+                                <th>PARTIDA PRESUPUESTARIA</th>
+                                <th>PRESUPUESTO</th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><t t-esc="o.budget_item.code"/> <t t-esc="o.budget_item.name.upper()"/></td>
+                                    <td><span t-field="o.budget"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <h5>CONDICIONES GENERALES DE EJECUCION</h5>
+                        <table class="table table-sm">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <strong>PLAZO DE EJECUCION:</strong> <t t-esc="o.days"/> <t t-esc="o.type_days"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>ESPECIFICACIONES TECNICAS:</strong> <t t-raw="o.technical_detail"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>FORMA DE PAGO:</strong> <t t-raw="o.payment_terms"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>MULTAS:</strong> <t t-raw="o.penalty_terms"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <br/>
+                        <table class="table table-sm">
+                            <thead>
+                                <th>SOLICITADO POR</th>
+                                <th>AUTORIZADO POR</th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-center">
+                                        <br/><br/><br/><br/>
+                                        <t t-esc="o.request_user_id.employee_id.fullname_report()"/><br/>
+                                        <t t-esc="o.user_job_title(o.request_user_id)"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <br/><br/><br/><br/>
+                                        <t t-esc="o.authorize_user_id.employee_id.fullname_report()"/><br/>
+                                        <t t-esc="o.user_job_title(o.authorize_user_id)"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <br/><br/><br/>
+                        <h5>APROBACION</h5>
+                        <table class="table table-sm">
+                            <tbody>
+                                <tr>
+                                    <td class="text-center">
+                                        <br/><br/><br/><br/>
+                                        GERENTE GENERAL
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        FECHA: <span t-field="o.approved_date"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>OBSERVACIONES: </strong>
+                                        <div class="text-justify">
+                                            <t t-raw="o.approved_details"/>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h5>ACEPTACION</h5>
+                        <table class="table table-sm">
+                            <tr>
+                                <td colspan="2">
+                                    Yo <br/>
+                                    <span class="text-justify">
+                                        <t t-raw="o.supplier_acceptance_terms"/>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr class="text-center">
+                                <td><br/><br/><br/><br/>FIRMA:</td>
+                                <td><br/><br/><br/><br/>FECHA: <t t-esc="o.acceptance_date"/></td>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="workorder_report" model="ir.actions.report">
+        <field name="name">Workorder</field>
+        <field name="model">workorder.workorder</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">workorders.report_workorder</field>
+        <field name="report_file">workorders.report_workorder</field>
+        <field name="print_report_name">(object._get_report_base_filename())</field>
+        <field name="attachment">(object.state == 'approved') and ((object.code).replace('/','_')+'.pdf')</field>
+        <field name="attachment_use">True</field>
+        <field name="binding_model_id" ref="model_workorder_workorder"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

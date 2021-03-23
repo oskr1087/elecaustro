@@ -3,6 +3,6 @@
     <record id="workorder_department_rule" model="ir.rule">
         <field name="name">Ordenes de Trabajo por Departamento</field>
         <field name="model_id" ref="model_workorder_workorder"/>
-        <field name="domain_force">['|',('department_id','=',False),('department_id', 'in', company_ids)]</field>
+        <field name="domain_force">['|',('department_id','=',False),('department_id', 'child_of', user.employee_id.department_id.id)]</field>
     </record>
 </odoo>

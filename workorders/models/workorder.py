@@ -61,13 +61,13 @@ class WorkOrder(models.Model):
     partner_id = fields.Many2one("res.partner", string="Supplier")
     currency_id = fields.Many2one(related="company_id.currency_id", store=True)
     budget = fields.Monetary(
-        "Order Budget", states={"draft": [("readonly", False)]}, readonly=True,
+        "Order Budget", states={"certified": [("readonly", False)]}, readonly=True,
     )
     budget_item = fields.Many2one(
         "account.analytic.account",
         string="Budget Item",
         domain=[("budget_type", "=", "budget"), ("internal_type", "=", "expense")],
-        states={"draft": [("readonly", False)]},
+        states={"certified": [("readonly", False)]},
         readonly=True,
     )
 
@@ -85,6 +85,9 @@ class WorkOrder(models.Model):
     authorize_user_id = fields.Many2one(
         "res.users", string="Authorized by", readonly=True, tracking=True
     )
+    certify_user_id = fields.Many2one(
+        "res.users", string="Certificate by", readonly=True, tracking=True
+    )
     approve_user_id = fields.Many2one(
         "res.users", string="Approved by", readonly=True, tracking=True
     )
@@ -95,6 +98,7 @@ class WorkOrder(models.Model):
     type_days = fields.Selection(
         [("working", "Working Days"), ("calendar", "Calendar Days")],
         string="Calendar Type",
+        states={"draft": [("readonly", False)]},
         required=True,
         default="working",
     )
@@ -130,7 +134,8 @@ class WorkOrder(models.Model):
     supplier_acceptance_terms = fields.Html(
         default=lambda self: self.env.company.workorder_supplier_acceptance
     )
-    acceptance_date = fields.Date("Acceptance Date", tracking=True)
+    acceptance_date = fields.Date("Acceptance Date", tracking=True, readonly=True)
+    certificate_date = fields.Date("Certificate Date", tracking=True, readonly=True)
     acceptance_done = fields.Boolean("Supplier Done Acceptance?", readonly=True)
 
     approve_level = fields.Selection(
@@ -144,6 +149,7 @@ class WorkOrder(models.Model):
     state = fields.Selection(
         [
             ("draft", "Draft"),
+            ("certified", "Certified"),
             ("requested", "Requested"),
             ("authorized", "Authorized"),
             ("approved", "Approved"),
@@ -169,6 +175,8 @@ class WorkOrder(models.Model):
 
     def action_request(self):
         self.state = "requested"
+        self.certificate_date = fields.Date.today()
+        self.certify_user_id = self.env.user
 
     def action_authorize(self):
         self.state = "authorized"
@@ -189,6 +197,9 @@ class WorkOrder(models.Model):
         self.state = "approved"
         self.approved_date = fields.Date.today()
         self.approve_user_id = self.env.user
+
+    def action_certified(self):
+        self.state = "certified"
 
     def print_report(self):
         return self.env.ref("workorders.workorder_report").report_action(

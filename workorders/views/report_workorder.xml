@@ -80,6 +80,30 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <br/>
+                        <h5>CERTIFICACIÓN PRESUPUESTARIA</h5>
+                        <table class="table table-sm">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        En la partida presupuestaria indicada, existe a la fecha, un saldo de: USD 
+                                        <span t-field="o.budget" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br/>
+                        <table class="table table-sm">
+                            <tbody>
+                                <tr>
+                                    <td class="text-center">
+                                        <br/><br/><br/>
+                                        <t t-esc="o.certify_user_id.employee_id.fullname_report()"/><br/>
+                                        <t t-esc="o.user_job_title(o.certify_user_id)"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
 
                         <br/><br/><br/>
                         <h5>APROBACION</h5>
